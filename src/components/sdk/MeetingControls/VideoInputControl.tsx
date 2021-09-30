@@ -15,13 +15,17 @@ import useSelectVideoInputDevice from '../../../hooks/sdk/useSelectVideoInputDev
 interface Props {
   /** The label that will be shown for video input control, it defaults to `Video`. */
   label?: string;
+  /** A boolean that determines whether or not to include additional sample video devices to the control bar */
+  appendAdditionalDevices?: boolean;
 }
 
-const videoInputConfig: DeviceConfig = {
-  additionalDevices: true,
-};
-
-const VideoInputControl: React.FC<Props> = ({ label = 'Video' }) => {
+const VideoInputControl: React.FC<Props> = ({ 
+  label = 'Video',
+  appendAdditionalDevices = true,
+}) => {
+  const videoInputConfig: DeviceConfig = {
+    additionalDevices: appendAdditionalDevices,
+  };
   const { devices, selectedDevice } = useVideoInputs(videoInputConfig);
   const { isVideoEnabled, toggleVideo } = useLocalVideo();
   const selectDevice = useSelectVideoInputDevice();

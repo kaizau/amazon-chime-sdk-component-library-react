@@ -21,18 +21,21 @@ interface Props {
   mutedIconTitle?: string;
   /** Title attribute for the icon when unmuted, it defaults to `Microphone` */
   unmutedIconTitle?: string;
+  /** A boolean that determines whether or not to include additional sample audio devices to the control bar */
+  appendAdditionalDevices?: boolean;
 }
 
 const AudioInputControl: React.FC<Props> = ({
   muteLabel = 'Mute',
   unmuteLabel = 'Unmute',
   mutedIconTitle,
-  unmutedIconTitle
+  unmutedIconTitle,
+  appendAdditionalDevices = true,
 }) => {
   const meetingManager = useMeetingManager();
   const { muted, toggleMute } = useToggleLocalMute();
   const audioInputConfig: DeviceConfig = {
-    additionalDevices: true,
+    additionalDevices: appendAdditionalDevices,
   };
   const { devices, selectedDevice } = useAudioInputs(audioInputConfig);
 

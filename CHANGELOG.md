@@ -42,6 +42,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Remove the audio video observers in the `audioVideoDidStop()` function instead of `leave()` function in the `MeetingManager`.
+- Change `additionalDevices` to a prop in `AudioInputControl`, `VideoInputControl`, `AudioInputVFControl` components to allow option to turn off that configuration.
 
 ### Removed
 
