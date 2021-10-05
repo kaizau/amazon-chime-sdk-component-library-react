@@ -98,12 +98,19 @@ To enable simulcast for the meeting pass the `simulcastEnabled` prop with value 
 For more information on Simulcast, check Amazon Chime JS SDK [simulcast guide](https://github.com/aws/amazon-chime-sdk-js/blob/master/guides/05_Simulcast.md).
 
 #### enableWebAudio
+
 If you want to enable Amazon Voice Focus feature, you should enable Web Audio for the meeting and pass the `enableWebAudio` prop with value set to `true`. By default, it is `false`.
 
 #### logger
 
 The `Logger` object that you want to be used in the meeting session.
 If you pass in a `Logger` object using this parameter, the `MeetingManager` will use this object instead of creating a logger based on `logLevel` and `postLogConfig` to initialize the meeting session.
+
+#### reselection
+
+This function passes through `MeetingProvider` and `DevicesProvider` and will be triggered in `AudioInputProvider`. 
+It determines how to deal with the current audio input device when audio put devices change and the current audio input device is the default device.
+You can implement your own audio input transform device with this function.
 
 #### activeSpeakerPolicy
 

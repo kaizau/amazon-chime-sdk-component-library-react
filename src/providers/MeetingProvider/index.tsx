@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import React, { useContext, useState, createContext } from 'react';
-import { Logger, LogLevel, VideoDownlinkBandwidthPolicy } from 'amazon-chime-sdk-js';
+import { Logger, LogLevel, Device, AudioTransformDevice, VideoDownlinkBandwidthPolicy } from 'amazon-chime-sdk-js';
 
 import MeetingManager from './MeetingManager';
 import { PostLogConfig } from './types';
@@ -31,6 +31,10 @@ interface Props {
    * based on `logLevel` and `postLogConfig` to initialize the meeting session.
    */
   logger?: Logger;
+  /** Determines how to handle the current audio input device when devices
+   *  change in `AudioInputProvider`.
+   */
+  reselection?: (device: Device) => Promise<Device | AudioTransformDevice>;
   /** The `VideoDownlinkBandwidthPolicy` object you want to use in meeting session */
   videoDownlinkBandwidthPolicy?: VideoDownlinkBandwidthPolicy;
   /** Pass a `MeetingManager` instance if you want to share this instance 
@@ -48,6 +52,7 @@ export const MeetingProvider: React.FC<Props> = ({
   simulcastEnabled = false,
   enableWebAudio = false,
   logger,
+  reselection,
   videoDownlinkBandwidthPolicy,
   meetingManager: meetingManagerProp,
   children,
@@ -60,7 +65,7 @@ export const MeetingProvider: React.FC<Props> = ({
     <MeetingContext.Provider value={meetingManager}>
       <MeetingEventProvider>
         <AudioVideoProvider>
-          <DevicesProvider>
+          <DevicesProvider reselection={reselection}>
             <RosterProvider>
               <RemoteVideoTileProvider>
                 <LocalVideoProvider>

@@ -9,7 +9,7 @@ import React, {
   useMemo,
   useRef,
 } from 'react';
-import { DeviceChangeObserver } from 'amazon-chime-sdk-js';
+import { Device, AudioTransformDevice, DeviceChangeObserver } from 'amazon-chime-sdk-js';
 
 import { useAudioVideo } from '../AudioVideoProvider';
 import { useMeetingManager } from '../MeetingProvider';
@@ -17,9 +17,13 @@ import { getFormattedDropdownDeviceOptions } from '../../utils/device-utils';
 import { DeviceTypeContext, DeviceConfig } from '../../types';
 import { AUDIO_INPUT } from '../../constants/additional-audio-video-devices';
 
+interface Props {
+  reselection?: (device: Device) => Promise<Device | AudioTransformDevice>;
+}
+
 const Context = createContext<DeviceTypeContext | null>(null);
 
-const AudioInputProvider: React.FC = ({ children }) => {
+const AudioInputProvider: React.FC<Props> = ({ children, reselection }) => {
   const meetingManager = useMeetingManager();
   const audioVideo = useAudioVideo();
   const [audioInputs, setAudioInputs] = useState<MediaDeviceInfo[]>([]);
@@ -67,7 +71,7 @@ const AudioInputProvider: React.FC = ({ children }) => {
           console.log(
             'Previously selected audio input lost. Selecting a default device.'
           );
-          meetingManager.selectAudioInputDevice(newAudioInputs[0].deviceId);
+          await meetingManager.selectAudioInputDevice(newAudioInputs[0].deviceId);
 
           // Safari and Firefox don't have this "default" as device Id
           // Only Chrome have this "default" device
@@ -75,8 +79,12 @@ const AudioInputProvider: React.FC = ({ children }) => {
           console.log(
             `Audio devices updated and "default" device is selected. Reselecting input.`
           );
+          let currentDevice: Device | AudioTransformDevice = 'default';
+          if (reselection) {
+            currentDevice = await reselection(currentDevice);
+          }
           try {
-            await audioVideo?.chooseAudioInputDevice(selectedInputRef.current);
+            await meetingManager.selectAudioInputDevice(currentDevice);
           } catch (e) {
             console.error(`Error in selecting audio input device - ${e}`);
           }
@@ -112,7 +120,7 @@ const AudioInputProvider: React.FC = ({ children }) => {
       audioVideo?.removeDeviceChangeObserver(observer);
       meetingManager.unsubscribeFromDeviceLabelTriggerChange(callback);
     };
-  }, [audioVideo]);
+  }, [audioVideo, reselection]);
 
   const contextValue: DeviceTypeContext = useMemo(
     () => ({

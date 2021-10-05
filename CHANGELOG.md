@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Fix the issue that `AudioVideoObserver` was not removed as expected in `LocalVideoProvider`.
 - Fix `eventDidReceive` observer removal in `MeetingManager`.
+- Fix the issue that Amazon Voice Focus does not get applied on new devices mid-meeting.
 
 ### Added
 

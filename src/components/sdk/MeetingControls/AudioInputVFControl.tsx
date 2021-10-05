@@ -29,6 +29,8 @@ interface Props {
   voiceFocusOnLabel?: string;
   /** The label that will be shown when the current input audio is not an Amazon Voice Focus device, it defaults to `Enable Amazon Voice Focus`. */
   voiceFocusOffLabel?: string;
+  /** The callback fired when user turns on/off Amazon Voice Focus. */
+  toggleVoiceFocus?: () => void
 }
 
 const AudioInputVFControl: React.FC<Props> = ({
@@ -36,6 +38,7 @@ const AudioInputVFControl: React.FC<Props> = ({
   unmuteLabel = 'Unmute',
   mutedIconTitle,
   unmutedIconTitle,
+  toggleVoiceFocus,
   voiceFocusOnLabel = 'Amazon Voice Focus enabled',
   voiceFocusOffLabel = 'Enable Amazon Voice Focus',
 }) => {
@@ -105,6 +108,9 @@ const AudioInputVFControl: React.FC<Props> = ({
           onClick={() => {
             setIsLoading(true);
             setIsVoiceFocusOn(current => !current);
+            if (toggleVoiceFocus) {
+              toggleVoiceFocus();
+            }
           }} />
       )
       dropdownOptions?.push(<PopOverSeparator key = 'separator' />);
