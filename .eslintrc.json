@@ -160,7 +160,7 @@
         "unicorn/no-null": "off",
         "unicorn/no-unsafe-regex": "warn",
         "unicorn/prevent-abbreviations": "off",
-        "simple-import-sort/sort": "off",
+        "simple-import-sort/sort": "warn",
         
         // React
         "react/prop-types": "off",
