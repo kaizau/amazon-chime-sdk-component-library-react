@@ -9,11 +9,11 @@ import { AudioOutputProvider, useAudioOutputs } from './AudioOutputProvider';
 import { VideoInputProvider, useVideoInputs } from './VideoInputProvider';
 
 interface Props {
-  reselection?: (device: Device) => Promise<Device | AudioTransformDevice>;
+  onDeviceReplacement?: (device: Device) => Promise<Device | AudioTransformDevice>;
 }
 
-const DevicesProvider: React.FC<Props> = ({ children, reselection }) => (
-  <AudioInputProvider reselection={reselection}>
+const DevicesProvider: React.FC<Props> = ({ children, onDeviceReplacement }) => (
+  <AudioInputProvider onDeviceReplacement={onDeviceReplacement}>
     <AudioOutputProvider>
       <VideoInputProvider>{children}</VideoInputProvider>
     </AudioOutputProvider>

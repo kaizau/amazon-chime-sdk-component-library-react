@@ -18,12 +18,12 @@ import { DeviceTypeContext, DeviceConfig } from '../../types';
 import { AUDIO_INPUT } from '../../constants/additional-audio-video-devices';
 
 interface Props {
-  reselection?: (device: Device) => Promise<Device | AudioTransformDevice>;
+  onDeviceReplacement?: (device: Device) => Promise<Device | AudioTransformDevice>;
 }
 
 const Context = createContext<DeviceTypeContext | null>(null);
 
-const AudioInputProvider: React.FC<Props> = ({ children, reselection }) => {
+const AudioInputProvider: React.FC<Props> = ({ children, onDeviceReplacement }) => {
   const meetingManager = useMeetingManager();
   const audioVideo = useAudioVideo();
   const [audioInputs, setAudioInputs] = useState<MediaDeviceInfo[]>([]);
@@ -35,6 +35,13 @@ const AudioInputProvider: React.FC<Props> = ({ children, reselection }) => {
   const [selectAudioInputDeviceError, setSelectAudioInputDeviceError] = useState(
     meetingManager.selectAudioInputDeviceError
   );
+
+  const replaceDevice = async (device: string): Promise<Device | AudioTransformDevice> => {
+    if (onDeviceReplacement) {
+      return onDeviceReplacement(device);
+    }
+    return device;
+  }
 
   useEffect(() => {
     meetingManager.subscribeToSelectAudioInputDeviceError(setSelectAudioInputDeviceError);
@@ -63,6 +70,7 @@ const AudioInputProvider: React.FC<Props> = ({ children, reselection }) => {
           (device) => device.deviceId === selectedInputRef.current
         );
 
+        let currentDevice: Device | AudioTransformDevice;
         if (
           selectedInputRef.current &&
           !hasSelectedDevice &&
@@ -71,7 +79,8 @@ const AudioInputProvider: React.FC<Props> = ({ children, reselection }) => {
           console.log(
             'Previously selected audio input lost. Selecting a default device.'
           );
-          await meetingManager.selectAudioInputDevice(newAudioInputs[0].deviceId);
+          currentDevice = await replaceDevice(newAudioInputs[0].deviceId);
+          await meetingManager.selectAudioInputDevice(currentDevice);
 
           // Safari and Firefox don't have this "default" as device Id
           // Only Chrome have this "default" device
@@ -79,10 +88,7 @@ const AudioInputProvider: React.FC<Props> = ({ children, reselection }) => {
           console.log(
             `Audio devices updated and "default" device is selected. Reselecting input.`
           );
-          let currentDevice: Device | AudioTransformDevice = 'default';
-          if (reselection) {
-            currentDevice = await reselection(currentDevice);
-          }
+          currentDevice = await replaceDevice('default');
           try {
             await meetingManager.selectAudioInputDevice(currentDevice);
           } catch (e) {
@@ -120,7 +126,7 @@ const AudioInputProvider: React.FC<Props> = ({ children, reselection }) => {
       audioVideo?.removeDeviceChangeObserver(observer);
       meetingManager.unsubscribeFromDeviceLabelTriggerChange(callback);
     };
-  }, [audioVideo, reselection]);
+  }, [audioVideo, onDeviceReplacement]);
 
   const contextValue: DeviceTypeContext = useMemo(
     () => ({

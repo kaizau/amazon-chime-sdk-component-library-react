@@ -34,7 +34,7 @@ interface Props {
   /** Determines how to handle the current audio input device when devices
    *  change in `AudioInputProvider`.
    */
-  reselection?: (device: Device) => Promise<Device | AudioTransformDevice>;
+  onDeviceReplacement?: (device: Device) => Promise<Device | AudioTransformDevice>;
   /** The `VideoDownlinkBandwidthPolicy` object you want to use in meeting session */
   videoDownlinkBandwidthPolicy?: VideoDownlinkBandwidthPolicy;
   /** Pass a `MeetingManager` instance if you want to share this instance 
@@ -52,7 +52,7 @@ export const MeetingProvider: React.FC<Props> = ({
   simulcastEnabled = false,
   enableWebAudio = false,
   logger,
-  reselection,
+  onDeviceReplacement,
   videoDownlinkBandwidthPolicy,
   meetingManager: meetingManagerProp,
   children,
@@ -65,7 +65,7 @@ export const MeetingProvider: React.FC<Props> = ({
     <MeetingContext.Provider value={meetingManager}>
       <MeetingEventProvider>
         <AudioVideoProvider>
-          <DevicesProvider reselection={reselection}>
+          <DevicesProvider onDeviceReplacement={onDeviceReplacement}>
             <RosterProvider>
               <RemoteVideoTileProvider>
                 <LocalVideoProvider>
