@@ -7,7 +7,7 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+## [2.11.0] - 2021-10-21
 
 ### Fixed
 
@@ -17,11 +17,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+
+- Add Eslint rules to enforce code style and fix issues.
 - Add logs for Amazon Voice Focus components.
+- Add FAQ link on audio outputs not available in FireFox and Safari.
+- Add `BackgroundBlurProvider` which provides a background blur video transform device.
+- Add `VideoInputBackgroundBlurControl` component which includes a checkbox for enabling background blur.
+- Add `unsubscribeFromSelectedVideoInputTranformDevice` which subscribes to changes to selected video devices.
+- Add `subscribeFromSelectedVideoInputTranformDevice`.
+- Add `publishSelectedVideoInputTranformDevice` which publishes a `Device | VideoTransformDevice` depending on what video device was chosen.
 
 ### Changed
 
 - Update `useSelectVideoInputDevice` hook documentation and usage example.
+- Update package.json to include NPM 8.
+- Update `meetingManager.selectVideoInputDevice` to accept `VideoTransformDevice` as a parameter.
 
 ### Removed
 

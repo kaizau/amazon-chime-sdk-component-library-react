@@ -6,7 +6,7 @@ import { Device, AudioTransformDevice } from 'amazon-chime-sdk-js';
 
 import { AudioInputProvider, useAudioInputs } from './AudioInputProvider';
 import { AudioOutputProvider, useAudioOutputs } from './AudioOutputProvider';
-import { VideoInputProvider, useVideoInputs } from './VideoInputProvider';
+import { useVideoInputs, VideoInputProvider } from './VideoInputProvider';
 
 interface Props {
   onDeviceReplacement?: (device: Device) => Promise<Device | AudioTransformDevice>;

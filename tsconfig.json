@@ -26,12 +26,12 @@
     "node_modules",
     "build",
     "demo",
+    "tst",
     "scripts",
     ".storybook",
     "src/internal",
     "src/**/*.test.tsx",
     "src/**/*.stories.tsx",
-    "tst",
     "coverage",
   ]
 }

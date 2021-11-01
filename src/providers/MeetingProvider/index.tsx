@@ -1,20 +1,26 @@
 // Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 // SPDX-License-Identifier: Apache-2.0
 
-import React, { useContext, useState, createContext } from 'react';
-import { Logger, LogLevel, Device, AudioTransformDevice, VideoDownlinkBandwidthPolicy } from 'amazon-chime-sdk-js';
+import {
+  AudioTransformDevice,
+  Device,
+  Logger,
+  LogLevel,
+  VideoDownlinkBandwidthPolicy,
+} from 'amazon-chime-sdk-js';
+import React, { createContext, useContext, useState } from 'react';
 
-import MeetingManager from './MeetingManager';
-import { PostLogConfig } from './types';
 import { AudioVideoProvider } from '../AudioVideoProvider';
-import { RosterProvider } from '../RosterProvider';
+import { ContentShareProvider } from '../ContentShareProvider';
 import { DevicesProvider } from '../DevicesProvider';
-import { RemoteVideoTileProvider } from '../RemoteVideoTileProvider';
-import { LocalVideoProvider } from '../LocalVideoProvider';
 import { FeaturedVideoTileProvider } from '../FeaturedVideoTileProvider';
 import { LocalAudioOutputProvider } from '../LocalAudioOutputProvider';
-import { ContentShareProvider } from '../ContentShareProvider';
+import { LocalVideoProvider } from '../LocalVideoProvider';
 import { MeetingEventProvider } from '../MeetingEventProvider';
+import { RemoteVideoTileProvider } from '../RemoteVideoTileProvider';
+import { RosterProvider } from '../RosterProvider';
+import MeetingManager from './MeetingManager';
+import { PostLogConfig } from './types';
 
 interface Props {
   /** Determines how verbose the logging statements will be */
@@ -26,8 +32,8 @@ interface Props {
   /** Whether or not to enable Web Audio for the meeting session */
   enableWebAudio?: boolean;
   /** The `Logger` object you want to use in meeting session.
-   * If you pass in a `Logger` object using this parameter, 
-   * the `MeetingManager` will use this object instead of creating a logger 
+   * If you pass in a `Logger` object using this parameter,
+   * the `MeetingManager` will use this object instead of creating a logger
    * based on `logLevel` and `postLogConfig` to initialize the meeting session.
    */
   logger?: Logger;
@@ -37,7 +43,7 @@ interface Props {
   onDeviceReplacement?: (device: Device) => Promise<Device | AudioTransformDevice>;
   /** The `VideoDownlinkBandwidthPolicy` object you want to use in meeting session */
   videoDownlinkBandwidthPolicy?: VideoDownlinkBandwidthPolicy;
-  /** Pass a `MeetingManager` instance if you want to share this instance 
+  /** Pass a `MeetingManager` instance if you want to share this instance
    * across multiple different `MeetingProvider`s. This approach has limitations.
    * Check `meetingManager` prop documentation for more information.
    */
@@ -58,7 +64,16 @@ export const MeetingProvider: React.FC<Props> = ({
   children,
 }) => {
   const [meetingManager] = useState(
-    () => meetingManagerProp || new MeetingManager({ logLevel, postLogConfig, simulcastEnabled, enableWebAudio, logger, videoDownlinkBandwidthPolicy })
+    () =>
+      meetingManagerProp ||
+      new MeetingManager({
+        logLevel,
+        postLogConfig,
+        simulcastEnabled,
+        enableWebAudio,
+        logger,
+        videoDownlinkBandwidthPolicy,
+      })
   );
 
   return (
