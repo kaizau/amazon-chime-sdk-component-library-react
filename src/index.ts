@@ -68,6 +68,7 @@ export {
   MicSelection,
   SpeakerSelection,
   QualitySelection,
+  BackgroundBlurCheckbox,
 } from './components/sdk/DeviceSelection';
 export {
   AudioInputControl,
