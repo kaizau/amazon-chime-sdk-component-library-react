@@ -40,7 +40,10 @@ interface Props {
   /** Determines how to handle the current audio input device when devices
    *  change in `AudioInputProvider`.
    */
-  onDeviceReplacement?: (device: Device) => Promise<Device | AudioTransformDevice>;
+  onDeviceReplacement?: (
+    nextDevice: string,
+    currentDevice: Device | AudioTransformDevice
+  ) => Promise<Device | AudioTransformDevice>;
   /** The `VideoDownlinkBandwidthPolicy` object you want to use in meeting session */
   videoDownlinkBandwidthPolicy?: VideoDownlinkBandwidthPolicy;
   /** Pass a `MeetingManager` instance if you want to share this instance

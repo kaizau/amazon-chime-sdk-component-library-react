@@ -9,7 +9,10 @@ import { AudioOutputProvider, useAudioOutputs } from './AudioOutputProvider';
 import { useVideoInputs, VideoInputProvider } from './VideoInputProvider';
 
 interface Props {
-  onDeviceReplacement?: (device: Device) => Promise<Device | AudioTransformDevice>;
+  onDeviceReplacement?: (
+    nextDevice: string,
+    currentDevice: Device | AudioTransformDevice
+  ) => Promise<Device | AudioTransformDevice>;
 }
 
 const DevicesProvider: React.FC<Props> = ({ children, onDeviceReplacement }) => (

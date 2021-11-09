@@ -1,7 +1,6 @@
 // Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 // SPDX-License-Identifier: Apache-2.0
 
-import { DeviceChangeObserver } from 'amazon-chime-sdk-js';
 import React, {
   createContext,
   useContext,
@@ -19,7 +18,10 @@ import { useAudioVideo } from '../AudioVideoProvider';
 import { useMeetingManager } from '../MeetingProvider';
 
 interface Props {
-  onDeviceReplacement?: (device: Device) => Promise<Device | AudioTransformDevice>;
+  onDeviceReplacement?: (
+    nextDevice: string,
+    currentDevice: Device | AudioTransformDevice
+  ) => Promise<Device | AudioTransformDevice>;
 }
 
 const Context = createContext<DeviceTypeContext | null>(null);
@@ -38,10 +40,13 @@ const AudioInputProvider: React.FC<Props> = ({ children, onDeviceReplacement }) 
 
   const replaceDevice = async (device: string): Promise<Device | AudioTransformDevice> => {
     if (onDeviceReplacement) {
-      return onDeviceReplacement(device);
+      return onDeviceReplacement(
+        device,
+        meetingManager.selectedAudioInputTransformDevice
+      );
     }
     return device;
-  }
+  };
 
   useEffect(() => {
     meetingManager.subscribeToSelectAudioInputDeviceError(
