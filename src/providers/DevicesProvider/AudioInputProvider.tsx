@@ -83,7 +83,7 @@ const AudioInputProvider: React.FC<Props> = ({ children, onDeviceReplacement }) 
           (device) => device.deviceId === selectedInputRef.current
         );
 
-        let currentDevice: Device | AudioTransformDevice;
+        let nextInput: string = '';
         if (
           selectedInputRef.current &&
           !hasSelectedDevice &&
@@ -92,8 +92,7 @@ const AudioInputProvider: React.FC<Props> = ({ children, onDeviceReplacement }) 
           console.log(
             'Previously selected audio input lost. Selecting a default device.'
           );
-          currentDevice = await replaceDevice(newAudioInputs[0].deviceId);
-          await meetingManager.selectAudioInputDevice(currentDevice);
+          nextInput = newAudioInputs[0].deviceId;
 
           // Safari and Firefox don't have this "default" as device Id
           // Only Chrome have this "default" device
@@ -101,12 +100,14 @@ const AudioInputProvider: React.FC<Props> = ({ children, onDeviceReplacement }) 
           console.log(
             `Audio devices updated and "default" device is selected. Reselecting input.`
           );
-          currentDevice = await replaceDevice('default');
-          try {
-            await meetingManager.selectAudioInputDevice(currentDevice);
-          } catch (e) {
-            console.error(`Error in selecting audio input device - ${e}`);
-          }
+          nextInput = 'default';
+        }
+
+        const nextDevice = await replaceDevice(nextInput);
+        try {
+          await meetingManager.selectAudioInputDevice(nextDevice);
+        } catch (e) {
+          console.error(`Error in selecting audio input device - ${e}`);
         }
 
         setAudioInputs(newAudioInputs);
